@@ -1,0 +1,36 @@
+.LevelPage {
+    background-color: #3D4145;
+    min-height: 100vh;
+    display: flex;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  font-family: 'Lexend';
+}
+.vim-editor {
+  background-color: #3D4145;
+  min-height: 100vh;
+  display: flex;
+font-size: calc(10px + 2vmin);
+color: white;
+font-family: 'Lexend';
+}
+.text-highlight {
+  background: rgb(215, 177, 24);
+  color: #000;
+}
+.utilities {
+  display:inline;
+  padding: 5px;
+  align-items:baseline;
+  width: 25%;
+}
+.level-name {
+  background-color: #50585f;
+  padding: 12px;
+  border-radius: 8px;
+  height: auto;
+  width: auto;
+}
+.user-info{
+  padding: 10px;
+}
