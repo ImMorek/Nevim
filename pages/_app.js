@@ -11,7 +11,6 @@ import '../styles/Home.css';
 import * as React from 'react';
 import { Component } from "react";
 
-
 const MyApp = (props) => {
   const { Component, pageProps } = props;
 

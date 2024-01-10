@@ -1,60 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import Editor from '@monaco-editor/react';
-import levelsJson from '../../levels.json'
 import InfoWindow from '../../components/InfoWindow';
-import { useTimer } from 'use-timer';
 import { useRouter } from "next/router";
 import LoginButton from '../../components/login-btn';
 import { useSession } from "next-auth/react"
+import {collection, onSnapshot, where, query, orderBy} from "@firebase/firestore"
+import {db} from "../../firebase";
+import levelsJson from "../../levels.json"
 
 const LevelPage = () => {
-  const router = useRouter(); 
-  // const levelNumber = router.query.levelId;
-  const levelNumber = 1;
-  const {data: session } = useSession();
 
-  console.log(levelNumber)
-  console.log(levelsJson);
-  const level = levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) === levelNumber);
+  const router = useRouter(); 
+  const levelNumber = router.query.levelId;
+  // const levelNumber = 2;
+  const [level, setLevel] = useState([])
+
+  useEffect(() => {
+      const collectionRef = collection(db, "levels")
+      const q = query(collectionRef, orderBy("levelNumber"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        console.log(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id})))
+        console.log(querySnapshot)
+        const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
+        console.log(leveldata);
+        console.log(leveldata[0].finishCriteria);
+        setLevel(leveldata[levelNumber - 1])
+      });
+      return unsubscribe;
+  }, [])
+  
+  const {data: session } = useSession();
+  
+  // setLevel(levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) === parseInt(levelNumber)));
+  // const level = queryLevel[0]
+  console.log(level)
   const [open, setOpen] = React.useState(false)
   const [alertMessage, alertSetMessage] = useState();
   const [alertPriority, setAlertPriority] = useState();
   const [alertTime, setAlertTime] = useState();
-  const {time, start, pause, reset, status} = useTimer({
-    initialTime: 0,
-    timerType: 'INCREMENTAL'
-  });
+
   const currentTime = new Date();
-  
-    if (!level) { return (<>Something went wrong...</>) }
-    const text = level.text;
+
+  if (levelNumber === undefined) {
+    return <>loading...</>;
+  }
+  if (!level.text) { return (<>Something went wrong...</>) }
+  const text = level.text.replaceAll("\\n", '\n');
+  console.log(level.finishCriteria)
   
     function handleEditorDidMount(editor, monaco) {
-  
       switch (level.completionType) {
         case "cursorPosition":
-          start();
           editor.onDidChangeCursorPosition((e) => {
-            if(e.position.lineNumber === level.finishCritera.at(0) && e.position.column === level.finishCritera.at(1)) {
+            if(e.position.lineNumber === level.finishCriteria.at(0) && e.position.column === level.finishCriteria.at(1)) {
               const finishTime = new Date() - currentTime
               alertSetMessage("Jsi na správné pozici, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish");
+              console.log(session.user.email + " " + level.levelId + " " + finishTime);
               setOpen(true);      
-              if(session){
-                console.log("Úkol zvládnul " + session.user.email + " za " + finishTime);
-              }      
+              const jsonForDb = "ahoj";
+              handleSaveData(jsonForDb);  
             }
           })    
           break;
         case "textEdit":
-          start();
           editor.onDidChangeModelContent((e) => {
             if(editor.getValue() === level.finishCritera) {
               const finishTime = new Date() - currentTime
-              alertSetMessage("Úkol splněn, " + {time});
+              alertSetMessage("Úkol splněn, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish")
+              console.log(session.user.email + " " + level.levelId + " " + finishTime);
+              if(session) {
+                const jsonForDb = {"level": level.levelId, "time": finishTime, "user": session.user.email};
+                handleSaveData(jsonForDb);
+              }
               setOpen(true);
             }
           })
@@ -139,3 +160,7 @@ const timeToString = (time) => {
   var seconds = ((time % 60000) / 1000).toFixed(0);
   return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
 }
+
+const handleSaveData = async (inputData) => {
+  console.log("šel bych ukládat")
+};

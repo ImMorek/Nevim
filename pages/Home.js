@@ -1,14 +1,13 @@
-import Layout from '../components/Layout';
+import LevelList from '../components/LevelList';
 import LoginButton from '../components/login-btn';
 
 const Home = () => {
-
   return (
     <div className="Home">
         <header className="Navbar">
             <div className='Tutorial-title'>Tutorial</div>
-        <ul className="Navbar">
-          <Layout/>
+        <ul className="Navbar-tutorial">
+          <LevelList/>
         </ul>
         </header>
       <div className='Title-items'>

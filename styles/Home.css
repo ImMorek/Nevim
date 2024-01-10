@@ -29,9 +29,28 @@ body {
     min-height: 100vh;
     top: 0;
     padding-top: 24px;
+    color: #796F6F;
+}
+.Navbar-tutorial {
+    min-height: 100vh;
+    top: 0;
+    padding-top: 24px;
+    color: #ffffff;
+}
+.Tutorial-levels {
+    color:#00FF1A;
+    text-decoration: none;
+}
+a:link {
+    color:#40de52;
+    text-decoration: none;
+}
+a:visited {
+    color:#e0e0e0;
+    text-decoration: none;
 }
 header {
-    min-width: 26vh;
+    min-width: 27.5vh;
     display: flex;
     flex-direction: column;
     align-items: center;

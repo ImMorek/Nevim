@@ -3,6 +3,7 @@ import Editor from '@monaco-editor/react';
 import levelsJson from '../levels.json'
 import InfoWindow from '../components/InfoWindow';
 import { useTimer } from 'use-timer';
+import {doc, getDoc} from "firebase/firestore";
 
 const LevelPage = () => {
   const levelNumber = 1;

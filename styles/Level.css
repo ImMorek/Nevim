@@ -1,3 +1,6 @@
+body {
+  font-family:monospace;
+}
 .LevelPage {
     background-color: #3D4145;
     min-height: 100vh;
@@ -23,6 +26,7 @@ font-family: 'Lexend';
   padding: 5px;
   align-items:baseline;
   width: 25%;
+  font-family:monospace;
 }
 .level-name {
   background-color: #50585f;

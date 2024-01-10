@@ -26,3 +26,43 @@
     transform: rotate(360deg);
   }
 }
+
+.newLevel{
+  display: flex;
+  justify-content: center;
+  margin: 14px;
+}
+.newLevelTitle {
+ font-size: 48px;
+}
+.textInput {
+  height: 600px;
+  width: 1200px;
+  background-color: #282c34;
+  border: none;
+  color: white;
+}
+
+.newLevelPropertiesContainer {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+.newTitle {
+  background-color: rgb(110, 110, 110);
+  border: none;
+  color: white;
+  margin-top: 10px;
+  height: 24px;
+}
+.submitBtn {
+  width: auto;
+  margin-top: 16px;
+  background-color: #222222;
+  border: none;
+    font-family:monospace;
+    color: white;
+font-size: 18px;
+padding: 12px;
+border-radius: 8px;
+}

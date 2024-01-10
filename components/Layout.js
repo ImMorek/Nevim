@@ -6,7 +6,7 @@ const Layout = () => {
     const levels = levelsJson.levels
     return ( 
         <>
-            <nav>
+            <nav className="Tutorial-levels">
                 {levels.map((level) => {return (
                     <li key={level.levelId}>
                         <Link href={`/Level/${level.levelNumber}`} >Lvl {level.levelNumber}</Link>
