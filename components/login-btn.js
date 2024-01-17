@@ -8,7 +8,7 @@ export default function LoginButton() {
       <>
         Signed in as {session.user.email} <br />
         <button onClick={() => signOut()}>Sign out</button>
-        <Link href={`/newLevel`} >Add Level</Link>
+        <Link href={`/levelsEdit`} >Level edit page</Link>
       </>
     )
   }

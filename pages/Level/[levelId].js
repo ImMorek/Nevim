@@ -8,30 +8,17 @@ import {collection, onSnapshot, where, query, orderBy} from "@firebase/firestore
 import {db} from "../../firebase";
 import levelsJson from "../../levels.json"
 
+
 const LevelPage = () => {
 
   const router = useRouter(); 
   const levelNumber = router.query.levelId;
-  // const levelNumber = 2;
-  const [level, setLevel] = useState([])
-
-  useEffect(() => {
-      const collectionRef = collection(db, "levels")
-      const q = query(collectionRef, orderBy("levelNumber"));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        console.log(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id})))
-        console.log(querySnapshot)
-        const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
-        console.log(leveldata);
-        console.log(leveldata[0].finishCriteria);
-        setLevel(leveldata[levelNumber - 1])
-      });
-      return unsubscribe;
-  }, [])
+  const [level, setLevel] = useState([''])
+  const [dbStatus, setDbStatus] = useState([false])
   
   const {data: session } = useSession();
   
-  // setLevel(levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) === parseInt(levelNumber)));
+  // setLevel(levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) == parseInt(levelNumber)));
   // const level = queryLevel[0]
   console.log(level)
   const [open, setOpen] = React.useState(false)
@@ -39,20 +26,40 @@ const LevelPage = () => {
   const [alertPriority, setAlertPriority] = useState();
   const [alertTime, setAlertTime] = useState();
 
+  useEffect(() => {
+    const collectionRef = collection(db, "levels")
+    const q = query(collectionRef, orderBy("levelNumber"));
+    console.log(levelNumber)
+    if(levelNumber !== undefined) {
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        console.log(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id})))
+        const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
+        console.log(leveldata[levelNumber - 1]);
+        setLevel(leveldata[levelNumber - 1])
+        setDbStatus(true);
+        return unsubscribe;
+      });
+    }
+    setLevel('');
+    return;
+  }, [levelNumber])
+  
+
   const currentTime = new Date();
 
-  if (levelNumber === undefined) {
+  if (levelNumber === undefined || dbStatus === false || level === '') {
     return <>loading...</>;
   }
+
   if (!level.text) { return (<>Something went wrong...</>) }
   const text = level.text.replaceAll("\\n", '\n');
-  console.log(level.finishCriteria)
   
     function handleEditorDidMount(editor, monaco) {
       switch (level.completionType) {
         case "cursorPosition":
           editor.onDidChangeCursorPosition((e) => {
-            if(e.position.lineNumber === level.finishCriteria.at(0) && e.position.column === level.finishCriteria.at(1)) {
+            console.log(level.finishCriteria.at(0));
+            if(e.position.lineNumber === parseInt(level.finishCriteria.at(0)) && e.position.column === parseInt(level.finishCriteria.at(1))) {
               const finishTime = new Date() - currentTime
               alertSetMessage("Jsi na správné pozici, ");
               setAlertTime(timeToString(finishTime));
@@ -66,12 +73,17 @@ const LevelPage = () => {
           break;
         case "textEdit":
           editor.onDidChangeModelContent((e) => {
-            if(editor.getValue() === level.finishCritera) {
+            console.log("textedit")
+            console.log(editor.getValue() === level.finishCriteria);
+            console.log(editor.getValue())
+            console.log(level)
+            if(editor.getValue() === level.finishCriteria) {
+              console.log("wah");
               const finishTime = new Date() - currentTime
               alertSetMessage("Úkol splněn, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish")
-              console.log(session.user.email + " " + level.levelId + " " + finishTime);
+
               if(session) {
                 const jsonForDb = {"level": level.levelId, "time": finishTime, "user": session.user.email};
                 handleSaveData(jsonForDb);
@@ -93,6 +105,9 @@ const LevelPage = () => {
             ])
           })
           editor.onDidChangeModelContent((e) => {
+            console.log(editor.getValue() === level.finishCritera);
+            console.log(editor.getValue())
+            console.log(level.finishCritera)
             if(editor.getValue() === level.finishCritera) {
               alertSetMessage("Úkol splněn");
               setAlertPriority("finish")
@@ -131,7 +146,6 @@ const LevelPage = () => {
           <Editor
             height="90vh"
             width="75%"
-            language="javascript"
             wrapperClassName="something"
             onMount={handleEditorDidMount}
             defaultValue={text}

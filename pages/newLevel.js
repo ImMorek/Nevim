@@ -5,12 +5,12 @@ import { db } from '../firebase';
 const NewLevel = () => {
 
     
-    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: 'cursorPosition', finishCriteria: [1, 3], text: '' });
+    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: '', finishCriteria: ['', ''], text: '' });
     const onSubmit = async () => {
         const collectionRef = collection(db, "levels");
         const docRef = await addDoc(collectionRef, {...level})
         alert('přidáno')
-        setLevel({levelNumber: '', levelName: '', completionType: 'cursorPosition', finishCriteria: [1, 3], text: '' }); 
+        setLevel({levelNumber: '', levelName: '', completionType: '', finishCriteria: '', text: '' }); 
     }
 
     useEffect(() => {
@@ -22,16 +22,40 @@ const NewLevel = () => {
         });
         return unsubscribe;
     }, [])
+    const [ 
+        selectedValue, 
+        setSelectedValue, 
+    ] = useState("cursorPosition"); 
+  
+    const handleRadioChange = ( 
+        value 
+    ) => { 
+        setSelectedValue(value); 
+        setLevel({...level, completionType:value})
+    }; 
+
     return (
         <div className="newLevel">
             <div className="textInputContainer">
             <textarea className="textInput" value={level.text} onChange={e=>setLevel({...level, text:e.target.value})}></textarea>
+            {selectedValue === "textEdit" ? <textarea className="textInput" onChange={e=>setLevel({...level, finishCriteria:e.target.value})}></textarea> : null}
             </div>
             <div className="newLevelPropertiesContainer">
                 <div className="newLevelTitle">NEW LEVEL</div>
                 <label>Level Title:</label>
                 <input type="text" className="newTitle" value={level.levelName} onChange={e=>setLevel({...level,levelName:e.target.value})}/>
-
+                <form>
+                    <label>
+                        <input type="radio" id="cursorPosition" value="cursorPosition" checked={selectedValue === "cursorPosition"} onChange={() => handleRadioChange("cursorPosition")}/>
+                        Cursor Position
+                        {selectedValue === "cursorPosition" ? <><input type="text" className="cursPosVal1" value={level.finishCriteria[0]} onChange={e=>setLevel({...level,finishCriteria:[e.target.value, level.finishCriteria[1]]})}/><input type="text" className="cursPosVal2" value={level.finishCriteria[1]} onChange={e=>setLevel({...level,finishCriteria:[level.finishCriteria[0], e.target.value]})}/></> : null}
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="radio" id="textEdit" value="textEdit" checked={selectedValue === "textEdit"} onChange={() => handleRadioChange("textEdit")}/>
+                        Text Edit
+                    </label>
+                </form>
                 <button className="submitBtn" onClick={onSubmit}>Submit</button>
             </div>
         </div>

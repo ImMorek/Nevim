@@ -36,11 +36,13 @@
  font-size: 48px;
 }
 .textInput {
-  height: 600px;
+  height: 300px;
   width: 1200px;
   background-color: #282c34;
   border: none;
   color: white;
+  margin-bottom: 24px;
+  border-radius: 8px;
 }
 
 .newLevelPropertiesContainer {
