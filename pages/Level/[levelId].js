@@ -57,6 +57,17 @@ const LevelPage = () => {
     function handleEditorDidMount(editor, monaco) {
       switch (level.completionType) {
         case "cursorPosition":
+          editor.getModel().findMatches('#').forEach(match => {
+            editor.createDecorationsCollection([
+              {
+                range: match.range,
+                options: {
+                  isWholeLine: false,
+                  inlineClassName: "text-highlight"
+                }
+              }
+            ])
+          })
           editor.onDidChangeCursorPosition((e) => {
             console.log(level.finishCriteria.at(0));
             if(e.position.lineNumber === parseInt(level.finishCriteria.at(0)) && e.position.column === parseInt(level.finishCriteria.at(1))) {
@@ -64,20 +75,33 @@ const LevelPage = () => {
               alertSetMessage("Jsi na správné pozici, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish");
-              console.log(session.user.email + " " + level.levelId + " " + finishTime);
               setOpen(true);      
-              const jsonForDb = "ahoj";
-              handleSaveData(jsonForDb);  
+              if(session) {
+                console.log(session.user.email + " " + level.levelId + " " + finishTime);
+                const jsonForDb = "ahoj";
+                handleSaveData(jsonForDb);  
+              }
             }
           })    
           break;
         case "textEdit":
+          const desiredText = level.finishCriteria.replaceAll("\\n", '\n');
+          editor.getModel().findMatches('#').forEach(match => {
+            editor.createDecorationsCollection([
+              {
+                range: match.range,
+                options: {
+                  isWholeLine: false,
+                  inlineClassName: "text-highlight"
+                }
+              }
+            ])
+          })
           editor.onDidChangeModelContent((e) => {
             console.log("textedit")
-            console.log(editor.getValue() === level.finishCriteria);
+            console.log(desiredText);
             console.log(editor.getValue())
-            console.log(level)
-            if(editor.getValue() === level.finishCriteria) {
+            if(editor.getValue() === desiredText) {
               console.log("wah");
               const finishTime = new Date() - currentTime
               alertSetMessage("Úkol splněn, ");

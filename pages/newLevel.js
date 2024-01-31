@@ -1,9 +1,10 @@
 import { addDoc, collection, onSnapshot, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
+import { useSession } from 'next-auth/react';
 
 const NewLevel = () => {
-
+    const { data: session } = useSession()
     
     const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: '', finishCriteria: ['', ''], text: '' });
     const onSubmit = async () => {
@@ -33,7 +34,12 @@ const NewLevel = () => {
         setSelectedValue(value); 
         setLevel({...level, completionType:value})
     }; 
-
+    if (!session) {
+        return(       
+        <>
+            Nothing for you to see here
+        </>);
+    }
     return (
         <div className="newLevel">
             <div className="textInputContainer">

@@ -1,10 +1,16 @@
 import {useState, useEffect} from "react";
-import {collection, onSnapshot, orderBy, query} from "@firebase/firestore"
+import {collection, onSnapshot, orderBy, query, deleteDoc, doc} from "@firebase/firestore"
 import {db} from "../firebase";
 import Link from 'next/link';
 import { useSession } from "next-auth/react";
 
 
+const deleteLevel = async (level) => {
+    const delLevelId = level.id
+    if(window.confirm("Opravdu chcete smazat " + level.levelNumber + "?")){
+        await deleteDoc(doc(db, "levels", delLevelId))
+    }
+}
 
 const LevelList = ( ) => {
     const [levels, setLevels] = useState([])
@@ -19,13 +25,12 @@ const LevelList = ( ) => {
         return unsubscribe;
     }, [])
     console.log("levels:" + levels);
-
     
     return (
-        <nav className="Tutorial-levels">
+        <nav className="Tutorial-levels-edit">
         {levels.map((level) => {return (
-            <li key={level.levelId}>
-                <Link href={`/Level/${level.levelNumber}`} >Lvl {level.levelNumber}</Link>{session ? ' x': ''}
+            <li key={level.id} className="Tutorial-list">
+                <Link href={`/Level/${level.levelNumber}`} >Lvl {level.levelNumber}</Link><button className="deleteButton" onClick={() => deleteLevel(level)}>Delete</button>
             </li>
         )
         })}

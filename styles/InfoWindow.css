@@ -28,6 +28,7 @@
     color: white;
     border: none;
     padding: 6px;
+    margin-left: 64px;
 }
 @keyframes anvil {
     0% {

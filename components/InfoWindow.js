@@ -22,10 +22,13 @@ const InfoWindow = (props) => {
             <div className="message">
             {props.alertMessage} {props.time}
             </div>
+            <br/>
+            <Link href={`/Level/${parseInt(props.levelNumber) + 1}`}>Next: Lvl {parseInt(props.levelNumber) + 1}</Link>
+            <br/>
+            <Link href={`/`}>Domů</Link>
             <button onClick={() => props.setOpen(false)} className="info-button">
               close
             </button>
-            <Link href={`/Level/${props.levelNumber + 1}`}>Next: Lvl {props.levelNumber + 1}</Link>
         </Popup>
         </div>
     )

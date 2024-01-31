@@ -68,3 +68,23 @@ font-size: 18px;
 padding: 12px;
 border-radius: 8px;
 }
+.deleteButton {
+  background-color: rgb(197, 52, 52);
+  border: none;
+  border-radius: 3px;
+  color: white;
+height: 24px;
+width: auto;
+padding-left: 23px;
+padding-right: 23px;
+}
+.Tutorial-levels-edit {
+  display: flex;
+  flex-direction: column;
+}
+.Tutorial-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 14px;
+}
