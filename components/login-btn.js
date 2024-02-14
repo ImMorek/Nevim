@@ -7,7 +7,7 @@ export default function LoginButton() {
     return (
       <>
         Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <button onClick={() => signOut()} className="signing">Sign out</button>
         <Link href={`/levelsEdit`} >Level edit page</Link>
       </>
     )
@@ -15,7 +15,7 @@ export default function LoginButton() {
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <button onClick={() => signIn()} className="signing">Sign in</button>
     </>
   )
   }

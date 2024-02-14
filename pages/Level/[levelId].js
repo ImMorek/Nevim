@@ -7,6 +7,9 @@ import { useSession } from "next-auth/react"
 import {collection, onSnapshot, where, query, orderBy} from "@firebase/firestore"
 import {db} from "../../firebase";
 import levelsJson from "../../levels.json"
+import tooltipsJson from "../../tooltips.json"
+
+// const tooltipsData = JSON.parse(tooltipsJson);
 
 
 const LevelPage = () => {
@@ -149,16 +152,31 @@ const LevelPage = () => {
           "monaco-vim": "https://unpkg.com/monaco-vim/dist/monaco-vim"
         }
       });
-  
+      
       editor.onKeyDown(async (e) => {
-        if (e.keyCode === monaco.KeyCode.DownArrow || e.keyCode === monaco.KeyCode.UpArrow || e.keyCode === monaco.KeyCode.LeftArrow || e.keyCode === monaco.KeyCode.RightArrow) {
-          setOpen(true);
-          alertSetMessage("Místo šipek použij h, j, k, l");
-          setAlertPriority("info");
-          console.log("waited")
-          e.preventDefault();
-        }
-      });
+        console.log(level.tooltips)
+        level.tooltips.map(tooltip_number => {
+          console.log(tooltip_number)
+          const tooltipData = tooltipsJson.tips.find(tip => tip.tip_number == parseInt(tooltip_number));
+          console.log(tooltipData);
+          console.log(e.keyCode)
+          console.log(tooltipData.trigger)
+            if(tooltipData.trigger.includes(e.keyCode)) {
+              	setOpen(true);
+                alertSetMessage(tooltipData.message);
+                setAlertPriority("info");
+                e.preventDefault();
+            }
+        })
+      })
+      // editor.onKeyDown(async (e) => {
+      //   if (e.keyCode === monaco.KeyCode.DownArrow || e.keyCode === monaco.KeyCode.UpArrow || e.keyCode === monaco.KeyCode.LeftArrow || e.keyCode === monaco.KeyCode.RightArrow) {
+      //     setOpen(true);
+      //     alertSetMessage("Místo šipek použij h, j, k, l");
+      //     setAlertPriority("info");
+      //     e.preventDefault();
+      //   }
+      // });
   
       window.require(["monaco-vim"], function (MonacoVim) {
         const statusNode = document.querySelector(".status-node");

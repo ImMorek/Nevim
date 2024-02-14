@@ -78,6 +78,25 @@ ul {
     border-radius: 8px;
     padding: 10px;
     padding-bottom: 15px;
+    transition: 0.2s;
+}
+.Login-button:hover {
+    background-color: #696d71;
+    transition: 0.2s;
+}
+.Back-button {
+    margin-top: 14px;
+    text-align: center;
+    background-color: #4b4f53;
+    border-radius: 8px;
+    padding: 10px;
+    color: #d8d8d8;
+    font-size: 24px;
+    transition: 0.2s;
+}
+.Back-button:hover {
+    background-color: #696d71;
+    transition: 0.2s;
 }
 
 

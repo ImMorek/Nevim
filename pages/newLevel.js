@@ -2,6 +2,7 @@ import { addDoc, collection, onSnapshot, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { useSession } from 'next-auth/react';
+import tooltipsJson from "../tooltips.json"
 
 const NewLevel = () => {
     const { data: session } = useSession()
@@ -34,6 +35,8 @@ const NewLevel = () => {
         setSelectedValue(value); 
         setLevel({...level, completionType:value})
     }; 
+
+
     if (!session) {
         return(       
         <>
@@ -63,6 +66,14 @@ const NewLevel = () => {
                     </label>
                 </form>
                 <button className="submitBtn" onClick={onSubmit}>Submit</button>
+                <div>
+                {tooltipsJson.tips.map((tip) => {return(
+                    <>
+                    <input type="checkbox" id={tip.tip_number} value={tip.tip_number} key={tip.tip_number}/>{tip.tip_name}
+                    </>
+                    )
+                })}
+                </div>
             </div>
         </div>
     );

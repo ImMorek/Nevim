@@ -14,7 +14,9 @@ const LevelsEdit = () => {
     return (
     <div className="Home">
         <header className="Navbar">
-            <div className='Tutorial-title'>Tutorial</div>
+            <div className='Tutorial-title'>Edit</div>
+            <Link href={'/'}><div className='Back-button'>Back</div></Link>
+
         <ul className="Navbar-tutorial">
           <Layout/>
         </ul>
@@ -26,9 +28,7 @@ const LevelsEdit = () => {
         <div className='Version'>
         v11.0.2
         </div>
-        <div className='Login-button'>
-        <Link href={`/newLevel`} >New level</Link>
-        </div>
+        <Link href={`/newLevel`} ><div className='Login-button'>New level</div></Link>
       </div>
     </div>
   );

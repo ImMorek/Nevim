@@ -77,6 +77,12 @@ height: 24px;
 width: auto;
 padding-left: 23px;
 padding-right: 23px;
+font-family:monospace;
+transition: 0.3s;
+}
+.deleteButton:hover {
+  background-color: rgb(206, 84, 84);
+transition: 0.3s;
 }
 .Tutorial-levels-edit {
   display: flex;

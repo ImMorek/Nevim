@@ -1,0 +1,28 @@
+{
+    "tips":    [
+        {
+        "tip_number": 1,
+        "tip_name": "Šipky",
+        "message": "Nepoužívej šipky! Místo šipek použij zkratky h, j, k, l!",
+        "trigger": [15, 16, 17, 18]
+        },
+        {
+            "tip_number": 2,
+            "tip_name": "Mazání písmen",
+            "message": "Maž písmeno pomocí 'x'",
+            "trigger": [39]
+        },
+        {
+            "tip_number": 3,
+            "tip_name": "Nový řádek",
+            "message": "Přidávej nový řádek pomocí zkratky 'o'",
+            "trigger": [39]
+        },
+        {
+            "tip_number": 4,
+            "tip_name": "Konec slova",
+            "message": "Na konec slova se dostaneš pomocí zkratky 'w'",
+            "trigger": [42]
+        }
+    ]
+}
