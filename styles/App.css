@@ -94,3 +94,14 @@ transition: 0.3s;
   align-items: center;
   margin-bottom: 14px;
 }
+.tips-options{
+  margin-top: 14px;
+  display: flex;
+  flex-direction:column;
+}
+.Login-button{
+  color: white;
+}
+.Login-buttom:visited {
+  color: none;
+}

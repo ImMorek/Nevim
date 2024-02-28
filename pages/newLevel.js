@@ -3,16 +3,16 @@ import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { useSession } from 'next-auth/react';
 import tooltipsJson from "../tooltips.json"
+import Link from 'next/link';
 
 const NewLevel = () => {
     const { data: session } = useSession()
     
-    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: '', finishCriteria: ['', ''], text: '' });
+    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: '', finishCriteria: ['', ''], text: '', tooltips: [] });
     const onSubmit = async () => {
         const collectionRef = collection(db, "levels");
         const docRef = await addDoc(collectionRef, {...level})
-        alert('přidáno')
-        setLevel({levelNumber: '', levelName: '', completionType: '', finishCriteria: '', text: '' }); 
+        setLevel({levelNumber: '', levelName: '', completionType: '', finishCriteria: '', text: '' , tooltips: []}); 
     }
 
     useEffect(() => {
@@ -35,6 +35,14 @@ const NewLevel = () => {
         setSelectedValue(value); 
         setLevel({...level, completionType:value})
     }; 
+
+    const [newTooltip, setNewTooltip] = useState([]);
+
+    const handleCheckboxChange = (value) => {
+        setNewTooltip({...newTooltip, value })
+        console.log(newTooltip);
+        setLevel({...level, tooltips:newTooltip});
+    }
 
 
     if (!session) {
@@ -64,16 +72,16 @@ const NewLevel = () => {
                         <input type="radio" id="textEdit" value="textEdit" checked={selectedValue === "textEdit"} onChange={() => handleRadioChange("textEdit")}/>
                         Text Edit
                     </label>
-                </form>
-                <button className="submitBtn" onClick={onSubmit}>Submit</button>
-                <div>
+                    <div className="tips-options">
                 {tooltipsJson.tips.map((tip) => {return(
-                    <>
-                    <input type="checkbox" id={tip.tip_number} value={tip.tip_number} key={tip.tip_number}/>{tip.tip_name}
-                    </>
+                    <label>
+                    <input type="checkbox" id={tip.tip_number} value={tip.tip_number} key={tip.tip_number} onChange={e=>handleCheckboxChange(tip.tip_number)}/>{tip.tip_name}
+                    </label>
                     )
                 })}
                 </div>
+                </form>
+                <button className="submitBtn" onClick={onSubmit}><Link href={`/levelsEdit`}></Link></button>
             </div>
         </div>
     );

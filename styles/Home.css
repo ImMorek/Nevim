@@ -13,11 +13,32 @@ body {
     display: flex;
     flex-direction: column;
     align-content: flex-end;
+
 }
 .Title {
     color: #00FF1A;
     text-shadow: 0px 0px 35px #00FF1A;
     font-size: 15vh;
+    background: linear-gradient(
+        to right,
+        #00FF1A 20%,
+        #b0f8b7 30%,
+        #c2f6c7 70%,
+        #00FF1A 80%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 500% auto;
+    animation: textShine 5s ease-in-out infinite alternate;
+}
+@keyframes textShine {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
 }
 .Version {
     padding-top: 14px;
@@ -35,7 +56,6 @@ body {
     min-height: 100vh;
     top: 0;
     padding-top: 24px;
-    color: #ffffff;
 }
 .Tutorial-levels {
     color:#00FF1A;
@@ -46,17 +66,18 @@ a:link {
     text-decoration: none;
 }
 a:visited {
-    color:#e0e0e0;
     text-decoration: none;
+    color: none;
 }
 header {
-    min-width: 27.5vh;
+    min-width: 32vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding-top: 3.5vh;
     font-size: 4vh;
+    box-shadow: 0px 0px 10px #1c1c1c;
 }
 ul {
     list-style-type: none;
@@ -70,6 +91,11 @@ ul {
     color: #A1A1A1;
     font-size: 4.5vh;
     letter-spacing: 5px;
+    transition: 0.4s;
+}
+.Tutorial-title:hover {
+    color: #ffffff;
+    transition: 0.4s;
 }
 .Login-button {
     margin-top: 20px;
@@ -79,10 +105,7 @@ ul {
     padding: 10px;
     padding-bottom: 15px;
     transition: 0.2s;
-}
-.Login-button:hover {
-    background-color: #696d71;
-    transition: 0.2s;
+    box-shadow: 0px 0px 3px #1c1c1c;
 }
 .Back-button {
     margin-top: 14px;
@@ -98,6 +121,54 @@ ul {
     background-color: #696d71;
     transition: 0.2s;
 }
+.completed {
+    color: #00FF1A;
+    transition: 0.3s;
+  }
+.completed:hover {
+    text-shadow: 0px 0px 35px #00FF1A;
+    transition: 0.3s;
+}
+.notCompleted {
+    color:#696d71;
+    transition: 0.3s;
 
+}
+.notCompleted:hover{
+    color:#98999b;
+    transition: 0.3s;
+}
+.signing {
+    background-color: #98999b;
+    border: none;
+    color: white;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-family:monospace;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-size: 16px;
+}
+.signing:hover {
+    background-color: #d8d8d8;
+    box-shadow: 0px 0px 5px #bdbdbd;
+    transition: 0.3s;
+}
+.levelEditLink {
+    margin-top: 3002px;
+    color: rgb(189, 189, 189);
+    transition: 0.3s;
+}
+.levelEditLink:visited{
+    color: none;
+}
+.levelEditLink:hover {
+    color: rgb(255, 255, 255);
+    transition: 0.3s;
+}
 
   

@@ -4,10 +4,10 @@ import InfoWindow from '../../components/InfoWindow';
 import { useRouter } from "next/router";
 import LoginButton from '../../components/login-btn';
 import { useSession } from "next-auth/react"
-import {collection, onSnapshot, where, query, orderBy} from "@firebase/firestore"
+import {collection, onSnapshot, where, query, orderBy, addDoc} from "@firebase/firestore"
 import {db} from "../../firebase";
 import levelsJson from "../../levels.json"
-import tooltipsJson from "../../tooltips.json"
+import tooltipsJson from "../../tooltips.json"  
 
 // const tooltipsData = JSON.parse(tooltipsJson);
 
@@ -28,6 +28,7 @@ const LevelPage = () => {
   const [alertMessage, alertSetMessage] = useState();
   const [alertPriority, setAlertPriority] = useState();
   const [alertTime, setAlertTime] = useState();
+  const [levelCompletions, setLevelCompletions] = useState();
 
   useEffect(() => {
     const collectionRef = collection(db, "levels")
@@ -35,9 +36,7 @@ const LevelPage = () => {
     console.log(levelNumber)
     if(levelNumber !== undefined) {
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        console.log(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id})))
         const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
-        console.log(leveldata[levelNumber - 1]);
         setLevel(leveldata[levelNumber - 1])
         setDbStatus(true);
         return unsubscribe;
@@ -46,6 +45,17 @@ const LevelPage = () => {
     setLevel('');
     return;
   }, [levelNumber])
+
+  useEffect(() => {
+    const collectionRef = collection(db, "completions")
+    const q = query(collectionRef, orderBy("time"));
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const levelfinishes = querySnapshot.docs.map(doc => ({ ...doc.data()}));
+        console.log(levelfinishes)
+        setLevelCompletions(levelfinishes)
+        return unsubscribe;
+      });
+  }, [])
   
 
   const currentTime = new Date();
@@ -72,7 +82,6 @@ const LevelPage = () => {
             ])
           })
           editor.onDidChangeCursorPosition((e) => {
-            console.log(level.finishCriteria.at(0));
             if(e.position.lineNumber === parseInt(level.finishCriteria.at(0)) && e.position.column === parseInt(level.finishCriteria.at(1))) {
               const finishTime = new Date() - currentTime
               alertSetMessage("Jsi na správné pozici, ");
@@ -80,9 +89,7 @@ const LevelPage = () => {
               setAlertPriority("finish");
               setOpen(true);      
               if(session) {
-                console.log(session.user.email + " " + level.levelId + " " + finishTime);
-                const jsonForDb = "ahoj";
-                handleSaveData(jsonForDb);  
+                handleSaveData({"level": level.levelId, "time": finishTime, "user": session.user.email});
               }
             }
           })    
@@ -101,19 +108,14 @@ const LevelPage = () => {
             ])
           })
           editor.onDidChangeModelContent((e) => {
-            console.log("textedit")
-            console.log(desiredText);
-            console.log(editor.getValue())
             if(editor.getValue() === desiredText) {
-              console.log("wah");
               const finishTime = new Date() - currentTime
               alertSetMessage("Úkol splněn, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish")
 
               if(session) {
-                const jsonForDb = {"level": level.levelId, "time": finishTime, "user": session.user.email};
-                handleSaveData(jsonForDb);
+                handleSaveData({"level": level.levelId, "time": finishTime, "user": session.user.email});
               }
               setOpen(true);
             }
@@ -132,12 +134,14 @@ const LevelPage = () => {
             ])
           })
           editor.onDidChangeModelContent((e) => {
-            console.log(editor.getValue() === level.finishCritera);
-            console.log(editor.getValue())
-            console.log(level.finishCritera)
+            const finishTime = new Date() - currentTime
             if(editor.getValue() === level.finishCritera) {
-              alertSetMessage("Úkol splněn");
+              alertSetMessage("Úkol splněn,");
+              setAlertTime(timeToString(finishTime));
               setAlertPriority("finish")
+              if(session) {
+                handleSaveData({"level": level.levelId, "time": finishTime, "user": session.user.email});
+              }
               setOpen(true);
             }
           })
@@ -145,7 +149,7 @@ const LevelPage = () => {
         default:
           break;
       }
-  
+      
   
       window.require.config({
         paths: {
@@ -154,13 +158,8 @@ const LevelPage = () => {
       });
       
       editor.onKeyDown(async (e) => {
-        console.log(level.tooltips)
         level.tooltips.map(tooltip_number => {
-          console.log(tooltip_number)
           const tooltipData = tooltipsJson.tips.find(tip => tip.tip_number == parseInt(tooltip_number));
-          console.log(tooltipData);
-          console.log(e.keyCode)
-          console.log(tooltipData.trigger)
             if(tooltipData.trigger.includes(e.keyCode)) {
               	setOpen(true);
                 alertSetMessage(tooltipData.message);
@@ -169,14 +168,6 @@ const LevelPage = () => {
             }
         })
       })
-      // editor.onKeyDown(async (e) => {
-      //   if (e.keyCode === monaco.KeyCode.DownArrow || e.keyCode === monaco.KeyCode.UpArrow || e.keyCode === monaco.KeyCode.LeftArrow || e.keyCode === monaco.KeyCode.RightArrow) {
-      //     setOpen(true);
-      //     alertSetMessage("Místo šipek použij h, j, k, l");
-      //     setAlertPriority("info");
-      //     e.preventDefault();
-      //   }
-      // });
   
       window.require(["monaco-vim"], function (MonacoVim) {
         const statusNode = document.querySelector(".status-node");
@@ -202,6 +193,13 @@ const LevelPage = () => {
             <div className="user-info">
               <LoginButton/>
             </div>
+            {session ? 
+          <>
+          {levelCompletions.map((completion => {return (
+             completion.level === level.levelId && completion.user === session.user.email ?  <div className="levelCompletion"><div className="goldText">Completion time: </div>{timeToString(completion.time)}</div> : null
+          )}))}
+          </> : ""  
+          }
           </div>
         </div>
       );
@@ -214,9 +212,10 @@ export default LevelPage;
 const timeToString = (time) => {
   var minutes = Math.floor(time / 60000);
   var seconds = ((time % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+  var miliseconds = ((time % 60000) % 1000);
+  return minutes + ":" + (seconds < 10 ? '0' : '') + seconds +":" +  miliseconds;
 }
 
 const handleSaveData = async (inputData) => {
-  console.log("šel bych ukládat")
-};
+    const collectionRef = collection(db, "completions");
+    const docRef = await addDoc(collectionRef, inputData)};

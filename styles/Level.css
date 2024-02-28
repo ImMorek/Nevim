@@ -31,11 +31,22 @@ font-family: 'Lexend';
 }
 .level-name {
   background-color: #50585f;
-  padding: 12px;
+  padding: 16px;
   border-radius: 8px;
   height: auto;
   width: auto;
+  font-size: 30px;
 }
 .user-info{
   padding: 10px;
+}
+.levelCompletion {
+  background-color: #272727;
+  border-radius: 8px;
+  font-size: 20px;
+  padding: 10px;
+  margin: 10px;
+}
+.goldText {
+  color: gold;
 }

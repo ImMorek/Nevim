@@ -30,7 +30,7 @@ const LevelList = ( ) => {
         <nav className="Tutorial-levels-edit">
         {levels.map((level) => {return (
             <li key={level.id} className="Tutorial-list">
-                <Link href={`/Level/${level.levelNumber}`} >Lvl {level.levelNumber}</Link><button className="deleteButton" onClick={() => deleteLevel(level)}>Delete</button>
+                <Link href={`/Level/${level.levelNumber}`} className="completed" >Lvl {level.levelNumber}</Link><button className="deleteButton" onClick={() => deleteLevel(level)}>Delete</button>
             </li>
         )
         })}
