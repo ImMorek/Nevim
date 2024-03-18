@@ -34,7 +34,7 @@ const LevelList = ( ) => {
         <nav className="Tutorial-levels">
         {levels.map((level) => {return (
             <li key={level.id}>
-                <Link href={`/Level/${level.levelNumber}` } className={(completions.find(completion => completion.level == level.id)) ? "completed" : "notCompleted"}>Lvl {level.levelNumber}</Link>
+                <Link href={`/Level/${level.levelNumber}` } className={(completions.find(completion => completion.level === level.id)) ? "completed" : "notCompleted"}>Lvl {level.levelNumber}</Link>
             </li>
         )
         })}

@@ -2,15 +2,15 @@ body {
   font-family:monospace;
 }
 .LevelPage {
-    background-color: #3D4145;
-    min-height: 100vh;
+  background-color: #123850;
+  min-height: 100vh;
     display: flex;
   font-size: calc(10px + 2vmin);
   color: white;
   font-family: 'Lexend';
 }
 .vim-editor {
-  background-color: #3D4145;
+  background-color: #123850;
   min-height: 100vh;
   display: flex;
 font-size: calc(10px + 2vmin);
@@ -28,6 +28,7 @@ font-family: 'Lexend';
   align-items:baseline;
   width: 25%;
   font-family:monospace;
+  overflow-y:scroll;
 }
 .level-name {
   background-color: #50585f;
@@ -49,4 +50,7 @@ font-family: 'Lexend';
 }
 .goldText {
   color: gold;
+}
+.completions{
+  height: 0;
 }

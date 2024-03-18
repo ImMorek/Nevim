@@ -1,5 +1,5 @@
 body {
-    background-color: #3D4145;
+    background-color: #123850;
     min-height: 100vh;
     display: flex;
   font-size: calc(10px + 2vmin);
@@ -46,11 +46,11 @@ body {
     font-size: 2.5vh;
 }
 .Navbar {
-    background-color: #2C2F33;
+    background-color: rgb(20, 25, 30);
     min-height: 100vh;
     top: 0;
     padding-top: 24px;
-    color: #796F6F;
+    color: #523f3f;
 }
 .Navbar-tutorial {
     min-height: 100vh;
@@ -100,7 +100,7 @@ ul {
 .Login-button {
     margin-top: 20px;
     text-align: center;
-    background-color: #4b4f53;
+    background-color: #202a35;
     border-radius: 8px;
     padding: 10px;
     padding-bottom: 15px;
@@ -170,5 +170,16 @@ ul {
     color: rgb(255, 255, 255);
     transition: 0.3s;
 }
-
+.nextLvl{
+    color: #00FF1A;
+}
+.nextLvl:visited{
+    color: none;
+}
+.homeLink{
+    color: #1c1c1c;
+}
+.homeLink:visited{
+    color: none;
+}
   

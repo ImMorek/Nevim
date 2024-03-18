@@ -4,9 +4,8 @@ import InfoWindow from '../../components/InfoWindow';
 import { useRouter } from "next/router";
 import LoginButton from '../../components/login-btn';
 import { useSession } from "next-auth/react"
-import {collection, onSnapshot, where, query, orderBy, addDoc} from "@firebase/firestore"
+import {collection, onSnapshot, query, orderBy, addDoc, where} from "@firebase/firestore"
 import {db} from "../../firebase";
-import levelsJson from "../../levels.json"
 import tooltipsJson from "../../tooltips.json"  
 
 // const tooltipsData = JSON.parse(tooltipsJson);
@@ -29,6 +28,16 @@ const LevelPage = () => {
   const [alertPriority, setAlertPriority] = useState();
   const [alertTime, setAlertTime] = useState();
   const [levelCompletions, setLevelCompletions] = useState();
+  const [editorTheme, setEditorTheme] = useState(() => {
+    const initialTheme = (typeof window !== 'undefined') ? localStorage.getItem("theme") : 'vs-dark';
+    return initialTheme ? initialTheme : 'vs-dark';
+  });
+
+  const newEditorTheme = (newTheme) => {
+    setEditorTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  }
+
 
   useEffect(() => {
     const collectionRef = collection(db, "levels")
@@ -48,14 +57,14 @@ const LevelPage = () => {
 
   useEffect(() => {
     const collectionRef = collection(db, "completions")
-    const q = query(collectionRef, orderBy("time"));
+    const q = query(collectionRef, where("user", "==", session ? session.user.email : ""));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const levelfinishes = querySnapshot.docs.map(doc => ({ ...doc.data()}));
-        console.log(levelfinishes)
+        var levelfinishes = querySnapshot.docs.map(doc => ({ ...doc.data()}));
+        levelfinishes = levelfinishes.sort();
         setLevelCompletions(levelfinishes)
         return unsubscribe;
       });
-  }, [])
+  }, [session])
   
 
   const currentTime = new Date();
@@ -149,8 +158,7 @@ const LevelPage = () => {
         default:
           break;
       }
-      
-  
+        
       window.require.config({
         paths: {
           "monaco-vim": "https://unpkg.com/monaco-vim/dist/monaco-vim"
@@ -158,8 +166,9 @@ const LevelPage = () => {
       });
       
       editor.onKeyDown(async (e) => {
+        // eslint-disable-next-line array-callback-return
         level.tooltips.map(tooltip_number => {
-          const tooltipData = tooltipsJson.tips.find(tip => tip.tip_number == parseInt(tooltip_number));
+          const tooltipData = tooltipsJson.tips.find(tip => tip.tip_number === parseInt(tooltip_number));
             if(tooltipData.trigger.includes(e.keyCode)) {
               	setOpen(true);
                 alertSetMessage(tooltipData.message);
@@ -182,7 +191,7 @@ const LevelPage = () => {
             wrapperClassName="something"
             onMount={handleEditorDidMount}
             defaultValue={text}
-            theme="vs-dark"
+            theme={editorTheme}
           />
           <InfoWindow setOpen={setOpen} open={open} alertMessage={alertMessage} alertPriority={alertPriority} levelNumber={levelNumber} time={alertTime}/>
           <div className="utilities">
@@ -193,12 +202,17 @@ const LevelPage = () => {
             <div className="user-info">
               <LoginButton/>
             </div>
+            <div className='EditorStyles'>
+              <button className="themeButton darkTheme" onClick={() => newEditorTheme('vs-dark')}></button>
+              <button className="themeButton lightTheme" onClick={() => newEditorTheme('vs')}></button>
+              <button className="themeButton blackTheme" onClick={() => newEditorTheme('hc-black')}></button>
+            </div>
             {session ? 
-          <>
+          <div className="completions">
           {levelCompletions.map((completion => {return (
-             completion.level === level.levelId && completion.user === session.user.email ?  <div className="levelCompletion"><div className="goldText">Completion time: </div>{timeToString(completion.time)}</div> : null
+             completion.level === level.levelId  ?  <div className="levelCompletion"><div className="goldText">Completion time: </div>{timeToString(completion.time)}</div> : null
           )}))}
-          </> : ""  
+          </div> : ""  
           }
           </div>
         </div>
@@ -218,4 +232,5 @@ const timeToString = (time) => {
 
 const handleSaveData = async (inputData) => {
     const collectionRef = collection(db, "completions");
+    // eslint-disable-next-line no-unused-vars
     const docRef = await addDoc(collectionRef, inputData)};

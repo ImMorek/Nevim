@@ -1,11 +1,27 @@
 import { useSession } from 'next-auth/react';
 import Layout from '../components/Layout';
-import LoginButton from '../components/login-btn';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import {  collection, onSnapshot, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
+
+
 
 const LevelsEdit = () => {
-    const { data: session } = useSession()
-    if (!session) {
+  const { data: session } = useSession()
+  
+
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+  const collectionRef = collection(db, "users")
+  const q = query(collectionRef, session ?  where("userMail", "==", session.user.email) : "");
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    setUser(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id}))[0])
+    });
+    return unsubscribe;
+  }, [session]);
+
+    if (user.isAdmin === false) {
         return(       
         <>
             Nothing for you to see here
@@ -28,7 +44,7 @@ const LevelsEdit = () => {
         <div className='Version'>
         v11.0.2
         </div>
-        <Link href={`/newLevel`} ><div className='Login-button'>New level</div></Link>
+        <Link href={`/newLevel`} ><div className='Login-button newLevelButton'>New level</div></Link>
       </div>
     </div>
   );

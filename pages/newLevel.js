@@ -1,4 +1,4 @@
-import { addDoc, collection, onSnapshot, query } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { useSession } from 'next-auth/react';
@@ -8,9 +8,10 @@ import Link from 'next/link';
 const NewLevel = () => {
     const { data: session } = useSession()
     
-    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: '', finishCriteria: ['', ''], text: '', tooltips: [] });
+    const[level, setLevel] = useState({levelNumber: '', levelName: '', completionType: 'cursorPosition', finishCriteria: ['', ''], text: '', tooltips: [] });
     const onSubmit = async () => {
         const collectionRef = collection(db, "levels");
+        // eslint-disable-next-line no-unused-vars
         const docRef = await addDoc(collectionRef, {...level})
         setLevel({levelNumber: '', levelName: '', completionType: '', finishCriteria: '', text: '' , tooltips: []}); 
     }
@@ -23,7 +24,7 @@ const NewLevel = () => {
         setLevel({...level, levelNumber: levelArray.length + 1})
         });
         return unsubscribe;
-    }, [])
+    }, [level])
     const [ 
         selectedValue, 
         setSelectedValue, 
@@ -39,18 +40,30 @@ const NewLevel = () => {
     const [newTooltip, setNewTooltip] = useState([]);
 
     const handleCheckboxChange = (value) => {
-        setNewTooltip({...newTooltip, value })
-        console.log(newTooltip);
-        setLevel({...level, tooltips:newTooltip});
-    }
+        let newArray = [...newTooltip, value];
+        if(newTooltip.includes(value)){
+            newArray = newArray.filter(tip => tip !== value)
+        }
+        setNewTooltip(newArray)
+        setLevel({...level, tooltips:newArray});
+    }  
 
-
-    if (!session) {
-        return(       
-        <>
-            Nothing for you to see here
-        </>);
-    }
+    const [user, setUser] = useState([]);
+    useEffect(() => {
+    const collectionRef = collection(db, "users")
+    const q = query(collectionRef, session ?  where("userMail", "==", session.user.email) : "");
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      setUser(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id}))[0])
+      });
+      return unsubscribe;
+    }, [session]);
+  
+      if (user.isAdmin === false) {
+          return(       
+          <>
+              Nothing for you to see here
+          </>);
+      }
     return (
         <div className="newLevel">
             <div className="textInputContainer">
@@ -75,13 +88,13 @@ const NewLevel = () => {
                     <div className="tips-options">
                 {tooltipsJson.tips.map((tip) => {return(
                     <label>
-                    <input type="checkbox" id={tip.tip_number} value={tip.tip_number} key={tip.tip_number} onChange={e=>handleCheckboxChange(tip.tip_number)}/>{tip.tip_name}
+                    <input type="checkbox" id={tip.tip_number} value={tip.tip_number} key={tip.tip_number} onChange={() => handleCheckboxChange(tip.tip_number)}/>{tip.tip_name}
                     </label>
                     )
                 })}
                 </div>
                 </form>
-                <button className="submitBtn" onClick={onSubmit}><Link href={`/levelsEdit`}></Link></button>
+                <Link href={`/levelsEdit`}><button className="submitBtn" onClick={onSubmit}>Potvrdit</button></Link>
             </div>
         </div>
     );

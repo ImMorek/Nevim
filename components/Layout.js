@@ -2,7 +2,6 @@ import {useState, useEffect} from "react";
 import {collection, onSnapshot, orderBy, query, deleteDoc, doc} from "@firebase/firestore"
 import {db} from "../firebase";
 import Link from 'next/link';
-import { useSession } from "next-auth/react";
 
 
 const deleteLevel = async (level) => {
@@ -14,7 +13,6 @@ const deleteLevel = async (level) => {
 
 const LevelList = ( ) => {
     const [levels, setLevels] = useState([])
-    const { data: session } = useSession()
 
     useEffect(() => {
         const collectionRef = collection(db, "levels")

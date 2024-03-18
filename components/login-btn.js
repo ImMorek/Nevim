@@ -1,5 +1,5 @@
 "use client";
-import { addDoc, collection, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, query,  where } from "firebase/firestore";
 import { useSession, signIn, signOut } from "next-auth/react"
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ export default function LoginButton() {
     });
     if(user === undefined) {
         const collectionRef = collection(db, "users");
+        // eslint-disable-next-line no-unused-vars
         const docRef = addDoc(collectionRef,{userMail: session.user.email, isAdmin: false})
   }
     return unsubscribe;
