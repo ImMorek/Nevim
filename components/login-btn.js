@@ -13,7 +13,6 @@ export default function LoginButton() {
   const q = query(collectionRef, session ?  where("userMail", "==", session.user.email) : "");
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     setUser(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id}))[0])
-      console.log(user);
     });
     if(user === undefined) {
         const collectionRef = collection(db, "users");

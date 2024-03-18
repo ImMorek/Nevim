@@ -22,7 +22,6 @@ const LevelList = ( ) => {
         });
         return unsubscribe;
     }, [])
-    console.log("levels:" + levels);
     
     return (
         <nav className="Tutorial-levels-edit">

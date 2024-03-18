@@ -22,7 +22,6 @@ const LevelPage = () => {
   
   // setLevel(levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) == parseInt(levelNumber)));
   // const level = queryLevel[0]
-  console.log(level)
   const [open, setOpen] = React.useState(false)
   const [alertMessage, alertSetMessage] = useState();
   const [alertPriority, setAlertPriority] = useState();
@@ -42,7 +41,6 @@ const LevelPage = () => {
   useEffect(() => {
     const collectionRef = collection(db, "levels")
     const q = query(collectionRef, orderBy("levelNumber"));
-    console.log(levelNumber)
     if(levelNumber !== undefined) {
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
