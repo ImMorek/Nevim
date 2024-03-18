@@ -7,13 +7,13 @@ import { getFirestore } from "firebase/firestore"
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBjNBeQMLzKH_brNRhw3J8ORSprtpXzH6o",
-  authDomain: "nevim-6d7fc.firebaseapp.com",
+  apiKey: process.env.FIREBASE_APIKEY,
+  authDomain: process.env.FIREBASE_AUTHDOMAIN,
   projectId: "nevim-6d7fc",
   storageBucket: "nevim-6d7fc.appspot.com",
-  messagingSenderId: "513957091176",
-  appId: "1:513957091176:web:f30f12bbfebbb075bce8dd",
-  measurementId: "G-6YE1KKLNEZ"
+  messagingSenderId: process.env.FIREBASE_SENDERID,
+  appId: process.env.FIREBASE_APPID,
+  measurementId: process.env.FIREBASE_MEASUREID
 };
 
 // Initialize Firebase
