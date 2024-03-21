@@ -24,7 +24,7 @@ const NewLevel = () => {
         setLevel({...level, levelNumber: levelArray.length + 1})
         });
         return unsubscribe;
-    }, [level])
+    }, [])
     const [ 
         selectedValue, 
         setSelectedValue, 
