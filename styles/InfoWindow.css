@@ -22,13 +22,14 @@
     margin-bottom: 8px;
 }
 .info-button {
+  font-family: monospace;
     outline: none;
     border-radius: 5px;
     background-color: #2C2F33;
     color: white;
     border: none;
     padding: 6px;
-    margin-left: 64px;
+    float: right;
 }
 @keyframes anvil {
     0% {
@@ -49,4 +50,10 @@
   }
   .popup-content {
     -webkit-animation: anvil 0.3s cubic-bezier(0.38, 0.1, 0.36, 0.9) forwards;
+  }
+  .nextLvlButton {
+    background: none;
+    border: none;
+    font-family: monospace;
+    font-size: 24px;
   }

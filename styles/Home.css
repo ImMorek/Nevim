@@ -177,7 +177,8 @@ ul {
     color: none;
 }
 .homeLink{
-    color: #1c1c1c;
+    padding-left: 6px;
+    color: white;
 }
 .homeLink:visited{
     color: none;

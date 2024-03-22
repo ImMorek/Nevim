@@ -127,3 +127,12 @@ transition: 0.3s;
 .blackTheme {
   background-color: black;
 }
+.UserImage {
+  margin-left: 12px;
+  border-radius: 8px;
+  max-width: 40px;
+}
+.Username {
+  display: flex;
+  align-items: center;
+}

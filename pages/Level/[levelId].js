@@ -22,7 +22,7 @@ const LevelPage = () => {
   
   // setLevel(levelsJson.levels.find((l) => parseInt(l.levelNumber, 10) == parseInt(levelNumber)));
   // const level = queryLevel[0]
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const [alertMessage, alertSetMessage] = useState();
   const [alertPriority, setAlertPriority] = useState();
   const [alertTime, setAlertTime] = useState();
@@ -31,6 +31,7 @@ const LevelPage = () => {
     const initialTheme = (typeof window !== 'undefined') ? localStorage.getItem("theme") : 'vs-dark';
     return initialTheme ? initialTheme : 'vs-dark';
   });
+  const [lastLevel, setLastLevel] = useState();
 
   const newEditorTheme = (newTheme) => {
     setEditorTheme(newTheme);
@@ -46,6 +47,8 @@ const LevelPage = () => {
         const leveldata = querySnapshot.docs.map(doc => ({ ...doc.data(), levelId: doc.id}))
         setLevel(leveldata[levelNumber - 1])
         setDbStatus(true);
+        console.log(leveldata.length + " " + levelNumber)
+        if( leveldata.length === levelNumber) {setLastLevel(true);}
         return unsubscribe;
       });
     }
@@ -94,6 +97,7 @@ const LevelPage = () => {
               alertSetMessage("Jsi na správné pozici, ");
               setAlertTime(timeToString(finishTime));
               setAlertPriority("finish");
+              setLastLevel(lastLevel)
               setOpen(true);      
               if(session) {
                 handleSaveData({"level": level.levelId, "time": finishTime, "user": session.user.email});
@@ -191,7 +195,7 @@ const LevelPage = () => {
             defaultValue={text}
             theme={editorTheme}
           />
-          <InfoWindow setOpen={setOpen} open={open} alertMessage={alertMessage} alertPriority={alertPriority} levelNumber={levelNumber} time={alertTime}/>
+          <InfoWindow setOpen={setOpen} open={open} alertMessage={alertMessage} alertPriority={alertPriority} levelNumber={levelNumber} time={alertTime} lastLevel={lastLevel}/>
           <div className="utilities">
             <div className='level-name'>
               {level.levelName}

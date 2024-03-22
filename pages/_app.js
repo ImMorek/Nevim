@@ -14,6 +14,7 @@ import { Component } from "react";
 const MyApp = (props) => {
   const { Component, pageProps } = props;
 
+
   return (
 <SessionProvider>
   <Component {...pageProps} />

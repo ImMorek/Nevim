@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 export default function LoginButton() {
   const { data: session } = useSession()
-  
   const [user, setUser] = useState([]);
   useEffect(() => {
   const collectionRef = collection(db, "users")
@@ -26,7 +25,10 @@ export default function LoginButton() {
   if (session) {
     return (
       <>
-        Signed in as {session.user.email} <br />
+        <div className="Username">
+        Signed in as {session.user.name}
+        <img className="UserImage" src={session.user.image} alt="User profile"></img> <br/>
+        </div>
         <button onClick={() => signOut()} className="signing">Sign out</button><br/>
         {user !== undefined ? user.isAdmin ? <Link href={`/levelsEdit`} className="levelEditLink" >Level edit page</Link>: null : null}
       </>
